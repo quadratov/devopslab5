@@ -38,14 +38,15 @@ def test_create_user_with_valid_email():
     }
     response = client.post("/api/v1/user", json=new_user)
     assert response.status_code == 201
-    data = response.json()
-    assert data['name'] == new_user['name']
-    assert data['email'] == new_user['email']
-    assert 'id' in data
+    user_id = response.json()          
+    assert isinstance(user_id, int)   
 
     get_response = client.get("/api/v1/user", params={'email': new_user['email']})
     assert get_response.status_code == 200
-    assert get_response.json()['email'] == new_user['email']
+    data = get_response.json()
+    assert data['name'] == new_user['name']
+    assert data['email'] == new_user['email']
+    assert data['id'] == user_id
 
 
 def test_create_user_with_invalid_email():
